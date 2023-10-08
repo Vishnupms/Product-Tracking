@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 const router = express.Router();
-router.post("/testData", async (req, res) => {
+router.post("/test-data", async (req, res) => {
     try {
       const usersData = req.body;
       console.log(req.body);

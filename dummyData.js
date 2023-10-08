@@ -36,7 +36,6 @@ export const dummyManufacturers =[
           "name": "Product 2",
          "description": "This is the second product",
          "price": 19.99,
-         "quantity": 1
        }
   ]
      

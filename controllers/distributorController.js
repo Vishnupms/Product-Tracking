@@ -3,38 +3,79 @@ import productModel from '../models/productModel.js';
 
 
 export const distributeProduct = async (req, res, next) => {
-    try {
-      // Verify that the product exists and is owned by the manufacturer
-      const productId = req.params.productId;
-    
-      const distributor = req.user;
-  
-      const product = await productModel.findOne({ _id: productId});
-  
-      if (!product) {
-        return res.status(404).json({ error: "product Not Found" });    
-      }
-      
-      const latestStatus = product.status[product.status.length-1];
-      // Check if the product status is "Manufactured" before distributing
-      if (latestStatus.currentStatus !== 'Manufactured') {
-        return next(createHttpError(400, 'Product must be in "Manufactured" status to distribute.'));
-      }
-      const newStatus = {
-        currentStatus: 'Distributed', // Set the new status
-        timestamp: new Date(), // Set the distribution timestamp
-      };
-      // Update the product status to "Distributed" and set the distributed timestamp
-      product.status.push(newStatus);
-      product.distributor = distributor._id; // You can set this to the distributor's ID
-      console.log(latestStatus,"cs")
-     let time = newStatus.timestamp.toLocaleString()
-      // Save the updated product
-      await product.save();
-  
-      res.status(200).json({ message: 'Product distributed successfully',Currentstatus:newStatus.currentStatus, time:time });
-    } catch (error) {
-      console.error('Error distributing product:', error);
-      return next(createHttpError(500, 'Failed to distribute product.'));
+  try {
+    const productId = req.params.productId;
+    const distributor = req.user;
+
+    const product = await productModel.findOne({ _id: productId });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product Not Found" });
     }
-  };
+
+    if (product.currentStatus === 'Distributed') {
+      return res.status(400).json({ error: "Product is already distributed" });
+    }
+
+    if (product.currentStatus !== 'Manufactured') {
+      return res.status(400).json({ error: "Product must be in manufactured state to distribute" });
+    }
+
+    await productModel.updateOne(
+      { _id: productId },
+      {
+        $set: {
+          currentStatus:'Distributed',
+          distributor: {
+            name: distributor.username,
+            location: distributor.location,
+            email: distributor.email,
+            distributedDate: new Date().toLocaleString()
+          }
+        }
+      }
+    );
+
+    const currentStatus = 'Distributed'; // Set the current status
+
+    res.status(200).json({ message: 'Product distributed successfully', currentStatus });
+  } catch (error) {
+    console.error('Error distributing product:', error);
+    return next(createHttpError(500, 'Failed to distribute product.'));
+  }
+};
+
+
+export const deleteDistributorDetails = async (req, res, next) => {
+  try {
+    const productId = req.params.productId;
+    const product = await productModel.findOne({ _id: productId });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product Not Found" });
+    }
+
+    if (product.currentStatus !== 'Distributed') {
+      return res.status(400).json({ error: "Product must be in distributed state to delete distributor details" });
+    }
+
+    // Use $unset to remove distributor-related fields
+    await productModel.updateOne(
+      { _id: productId },
+      {
+        $unset: {
+          'distributor': 1
+        },
+        $set: {
+          'currentStatus': 'Manufactured'
+        }
+      }
+    );
+
+
+    res.status(200).json({ message: 'Distributor details deleted successfully, and currentStatus set to previous status' });
+  } catch (error) {
+    console.error('Error deleting distributor details:', error);
+    return next(createHttpError(500, 'Failed to delete distributor details.'));
+  }
+};

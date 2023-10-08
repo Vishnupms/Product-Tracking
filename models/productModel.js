@@ -1,19 +1,5 @@
 import mongoose from "mongoose";
-const statusChangeSchema = new mongoose.Schema(
-  {
-    currentStatus: {
-      type: String,
-      enum: ['Manufactured', 'Distributed', 'Retailed', 'Sold'],
-      default: "Manufactured",
-      required: true,
-    },
-    timestamp: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  { _id: false } // Specify _id: false here to disable _id generation for this subdocument
-);
+
 
 
 const productSchema = new mongoose.Schema({
@@ -21,26 +7,37 @@ const productSchema = new mongoose.Schema({
     name: { type: String, required: true, unique:true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    quantity: { type: Number, required: true },
-    isInStock:{type:Boolean, default:true},
-    status:[statusChangeSchema],
+    MFG:{type:Date,required:true},
+    currentStatus:{
+      type:String,
+      enum:['Manufactured', 'Distributed', 'Retailed', 'Sold'],
+      default:"Manufactured",
+      required:true
+    },
    manufacturer:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"userData",
-    required:true 
+    name:{type:String,required:true},
+    location:String,
+    email:String,
+    manufacturedDate: Date
    },
    distributor:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"userData",
+    name:String,
+    location:String,
+    email:String,
+    distributedDate:Date,
    },
    retailer:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"userData",
+    name:String,
+    location:String,
+    email:String,
+    retailedDate:Date,
 
    },
    customer:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"userData",
+    name:String,
+    location:String,
+    email:String,
+    soldDate:Date,
    }
     
     

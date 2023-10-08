@@ -7,5 +7,9 @@ const router = express.Router();
 //add-product
 router.post("/add-product",controller.addProduct)
 
+// delete a manufactured product
+router.delete("/delete-product/:productId",controller.deleteProduct)
+
+
 
 export default router;

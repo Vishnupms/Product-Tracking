@@ -4,38 +4,52 @@ import productModel from '../models/productModel.js';
 export const addProduct = async (req,res) =>{
     try {
         // Retrieve product data from the request body
-        const { name, description, price, quantity } = req.body;
+        const { name, description, price } = req.body;
         const manufacturer = req.user
-        const defaultStatus = {
-            Currentstatus: "Manufactured",
-            timestamp: new Date(),
-          };
         // Create a new product document
-        const product = new productModel({
+        const product = new productModel({  
           name,
           description,
           price,
-          quantity,
-          manufacturer: manufacturer._id,
-          status:[defaultStatus]
+          MFG:new Date().toLocaleString(),
+          manufacturer:{
+            name: manufacturer.username,
+            location:manufacturer.location,
+            email:manufacturer.email,
+            manufacturedDate: new Date().toLocaleString()
+          }
         });
     
         // Save the product to the database
         await product.save();
 
-        const currentStatus = product.status[0];
-
-    // Extract only the values of the current status object
-    const currentStatusValues = {
-        status: currentStatus.currentStatus,
-        time: currentStatus.timestamp.toLocaleString(),
-      };
-
-    
-        res.status(201).json({ message: "Product added successfully", Currentstatus:currentStatusValues.status, time:currentStatusValues.time});
+        const currentStatus = product.status;
+        res.status(201).json({ message: "Product added successfully", currentStatus});
       } catch (error) {
         console.error("Error adding product:", error);
         res.status(500).json({ error: "Failed to add product" });
       }
     }
     
+export const deleteProduct= async(req,res)=>{
+  try {
+    const productId = req.params.productId;
+
+    const product = await productModel.findOne({ _id: productId });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product Not Found' });
+    }
+    if(product.currentStatus !== "Manufactured"){
+      return  res.status(403).json({message:"You cannot delete a distributed product"});
+    }
+    await productModel.findByIdAndDelete(productId);
+
+      res.status(200).json({ message: 'Product deleted successfully'});
+    }
+    
+   catch (error) {
+    console.error('Error deleting product:', error);
+    return next(createHttpError(500, 'Failed to delete product.'));
+  }
+}

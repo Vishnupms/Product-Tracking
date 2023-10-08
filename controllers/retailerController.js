@@ -1,50 +1,52 @@
-// import bcrypt from 'bcrypt'
-// import jwt from 'jsonwebtoken'
-// import createHttpError from "http-errors";
-// import retailerModel from '../models/retailerModel';
+import createHttpError from "http-errors";
+import productModel from "../models/productModel.js";
 
-// export const retailerRegister = async(req,res,next)=>{
-//     try {
-//         const { username, email, password, phone, location } = req.body;
-    
-//         const existingRetailer = await retailerModel.findOne({ email });
-//         if (existingRetailer) return next(createHttpError(409, "Email address is already taken. Please choose another one or log in instead"));
-    
-//         const hashedPassword = await bcrypt.hash(password, 10);
-    
-//         const retailer = new retailerModel({
-//           username,
-//           email,
-//           password: hashedPassword,
-//           phone,
-//           location,
-//         });
-    
-//         // Save the manufacturer to the database
-//         await retailer.save();
-    
-//         res.status(201).json({ message: "Retailer registered successfully" });
-//       } catch (error) {
-//         console.error("Error registering Retailer:", error);
-//         res.status(500).json({ error: "Registration failed" });
-//       }
-// }
 
-// export const retailerLogin = async (req, res, next) => {
-//     const email = req.body.email
-//     const passwordRaw = req.body.password
-//     try {
-//         const retailer = await retailerModel.findOne({ email })
-//         if (!retailer) return next(createHttpError(404, "retailer not found"));
-//         const passwordValidate = await bcrypt.compare(passwordRaw, retailer.password)
-//         if (!passwordValidate) return next(createHttpError(404, "Password does not match"));
-        
-//         const token = jwt.sign({
-//             retailerId: retailer._id,
-//         }, process.env.JWT_SECRET, { expiresIn: "24h" })
-//         return res.json({success:true ,token, msg: "Login successfull.." });
-//     } catch (error) {
-//         next(error)
-//     }
-// }
+export const retailProduct = async (req, res, next) => {
+    try {
+      const productId = req.params.productId;
+      const retailer = req.user;
+     
+      const product = await productModel.findOne({ _id: productId });
 
+      console.log(product.currentStatus,"cc")
+  
+      if (!product) {
+        return res.status(404).json({ error: "Product Not Found" });
+      }
+  
+      if (product.currentStatus === 'Retailed') {
+        return res.status(400).json({ error: "Product is already retailed" });
+      }
+
+      if(product.currentStatus === "Manufactured"){
+        return res.status(400).json({ error: "Product must be in distributed state to be Retailed" });
+      }
+  
+      if (product.currentStatus !== 'Distributed') {
+        return res.status(400).json({ error: "Product must be in distributed state to be Retailed" });
+      }
+  
+      await productModel.updateOne(
+        { _id: productId },
+        {
+          $set: {
+            currentStatus:'Retailed',
+            retailer: {
+              name: retailer.username,
+              location: retailer.location,
+              email: retailer.email,
+              retailedDate: new Date().toLocaleString()
+            }
+          }
+        }
+      );
+  
+      const currentStatus = 'Retailed'; 
+  
+      res.status(200).json({ message: 'Product retailed successfully', currentStatus });
+    } catch (error) {
+      console.error('Error retailing product:', error);
+      return next(createHttpError(500, 'Failed to retail product.'));
+    }
+  };
