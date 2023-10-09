@@ -28,7 +28,7 @@ export const addProduct = async (req,res) =>{
         let currentStatus = status.currentStatus
         let time = status.updatedTime.toLocaleString()
 
-        res.status(201).json({ message: "Product added successfully", currentStatus,time});
+        res.status(201).json({ message: "Product added successfully", currentStatus,time,productId:product._id});
       } catch (error) {
         console.error("Error adding product:", error);
         res.status(500).json({ error: "Failed to add product" });

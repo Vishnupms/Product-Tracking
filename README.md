@@ -12,6 +12,7 @@ npm install
 
 Configuration
 In Backend create a .env file in Server and add the following
+DB_STRING = Your Database String
 PORT = 8000
 JWT_SECRET =YOUR SECRET KEY
 
