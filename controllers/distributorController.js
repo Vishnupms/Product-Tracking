@@ -56,10 +56,9 @@ export const deleteDistributorDetails = async (req, res, next) => {
     }
 
     if (product.currentStatus !== 'Distributed') {
-      return res.status(400).json({ error: "Product must be in distributed state to delete distributor details" });
+      return res.status(400).json({ error: "Product must be in distributed state to cancel distribute" });
     }
-
-    // Use $unset to remove distributor-related fields
+    // canceling distribution
     await productModel.updateOne(
       { _id: productId },
       {
@@ -71,9 +70,10 @@ export const deleteDistributorDetails = async (req, res, next) => {
         }
       }
     );
+    const currentStatus = "Manufactured"
 
 
-    res.status(200).json({ message: 'Distributor details deleted successfully, and currentStatus set to previous status' });
+    res.status(200).json({ message: 'Distribute cancelled successfully',currentStatus });
   } catch (error) {
     console.error('Error deleting distributor details:', error);
     return next(createHttpError(500, 'Failed to delete distributor details.'));

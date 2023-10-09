@@ -37,6 +37,7 @@ const productSchema = new mongoose.Schema({
     name:String,
     location:String,
     email:String,
+    phone:Number,
     soldDate:Date,
    }
     

@@ -4,8 +4,8 @@ const router = express.Router();
 
 
 //distribute-product
-router.put("/distribute/:productId",controller.distributeProduct)
-router.put("/delete-distribute/:productId",controller.deleteDistributorDetails)
+router.patch("/distribute/:productId",controller.distributeProduct)
+router.patch("/cancel-distribute/:productId",controller.deleteDistributorDetails)
 
 
 export default router;

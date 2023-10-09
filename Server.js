@@ -5,6 +5,7 @@ import "dotenv/config.js";
 import authRoute from "./routes/authRoutes.js";
 import manufacturerRoute from "./routes/manufacturerRoute.js";
 import distributorRoute from "./routes/distributorRoute.js";
+import customerRoute from './routes/customerRoute.js'
 import retailerRoute from './routes/retailerRoute.js'
 import testRoute from './routes/testRoute.js'
 import { authMiddleware } from "./middlewares/auth.middleware.js";
@@ -12,6 +13,7 @@ import { verifyDistributor } from "./middlewares/verifyDistributor.js";
 import { verifyManufacturer } from "./middlewares/verifyManufacturer.js";
 import productModel from "./models/productModel.js";
 import { verifyRetailer } from "./middlewares/verifyRetailer.js";
+import { verifyCustomer } from "./middlewares/verifyCustomer.js";
 
 const app = express();
 app.use(express.json());
@@ -35,7 +37,13 @@ app.use(
   verifyRetailer,
   retailerRoute
 );
-app.use('/api/test', testRoute)
+app.use(
+  "/api/customer",
+  authMiddleware,
+  verifyCustomer,
+  customerRoute
+);
+app.use('/test', testRoute)
 
 //get all details of a product
 

@@ -23,7 +23,7 @@ export const addProduct = async (req,res) =>{
         // Save the product to the database
         await product.save();
 
-        const currentStatus = product.status;
+        const currentStatus = product.currentStatus;
         res.status(201).json({ message: "Product added successfully", currentStatus});
       } catch (error) {
         console.error("Error adding product:", error);
