@@ -32,12 +32,12 @@ export const dummyManufacturers =[
       "role": "customer"
     }
     ,
-      {
-          "name": "Product 2",
-         "description": "This is the second product",
-         "price": 19.99,
-       }
   ]
+  const product = {
+      "name": "Product 2",
+     "description": "This is the second product",
+     "price": 19.99,
+   }
      
 
 

@@ -46,6 +46,9 @@ app.use('/api/test', testRoute)
 app.get('/api/*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
+app.get('/', (req, res) => {
+  res.send('Hello Tester!');
+});
 
 
 const port = process.env.PORT;
