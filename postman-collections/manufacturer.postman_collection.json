@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "830adc72-8d92-4b0e-b7f6-f128c3dfbb75",
+		"name": "manufacturer",
+		"description": "this collection contail manufacturer Apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29219085"
+	},
+	"item": [
+		{
+			"name": "manufacturer-login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "add-product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "delete-product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

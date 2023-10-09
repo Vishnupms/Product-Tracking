@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "868a5fa3-99b9-4e06-a823-2c7efdfa6b93",
+		"name": "distributor",
+		"description": "this collection contail distributor Apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29219085"
+	},
+	"item": [
+		{
+			"name": "distributor-login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "distribute-product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "cancel-distribute",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
