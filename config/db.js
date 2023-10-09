@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
+import 'dotenv/config.js'
+
 
 const connect = async() => {
-   mongoose.connect('mongodb://127.0.0.1/product', {
+   mongoose.connect(process.env.DB_STRING, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

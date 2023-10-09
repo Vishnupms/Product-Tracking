@@ -46,16 +46,13 @@ app.use('/api/test', testRoute)
 app.get('/api/*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
-app.get('/', (req, res) => {
-  res.send('Hello Tester!');
-});
 
 
 const port = process.env.PORT;
 app.listen(port, async () => {
   try {
     await connect();
-    console.log(`server connected to http://localhost:${port}`);
+    console.log(`server connected to PORT:${port}`);
   } catch (error) {
     console.log(error);
   }
