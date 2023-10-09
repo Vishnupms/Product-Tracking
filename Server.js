@@ -54,8 +54,12 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT;
+const DB = process.env.DB_STRING
 
-mongoose.connect(process.env.DB_STRING).then(() => {
+mongoose.connect(DB,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
   try {
       server.listen(port, () => {
           console.log(`server connected to PORT:${port}`);
