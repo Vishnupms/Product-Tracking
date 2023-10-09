@@ -29,7 +29,7 @@ router.post("/test-data", async (req, res) => {
         await user.save();
       }
   
-      res.status(201).json({ message: "Users added successfully" });
+      res.status(201).json({ message: "Manufature, Distributer, Retailer, and Customer datas are added to database successfully" });
     } catch (error) {
       console.error("Error adding users:", error);
       res.status(500).json({ error: "Failed to add users" });

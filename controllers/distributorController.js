@@ -1,5 +1,6 @@
 import createHttpError from "http-errors";
 import productModel from '../models/productModel.js';
+import mongoose from "mongoose";
 
 
 export const distributeProduct = async (req, res, next) => {
@@ -8,37 +9,36 @@ export const distributeProduct = async (req, res, next) => {
     const distributor = req.user;
 
     const product = await productModel.findOne({ _id: productId });
-
+    
     if (!product) {
       return res.status(404).json({ error: "Product Not Found" });
     }
+    let status = product.status[product.status.length-1]
 
-    if (product.currentStatus === 'Distributed') {
+    if (status.currentStatus === 'Distributed') {
       return res.status(400).json({ error: "Product is already distributed" });
     }
 
-    if (product.currentStatus !== 'Manufactured') {
+    if (status.currentStatus !== 'Manufactured') {
       return res.status(400).json({ error: "Product must be in manufactured state to distribute" });
     }
+    const newStatus = {
+      currentStatus: 'Distributed',
+      updatedTime: new Date(),
+    };
 
     await productModel.updateOne(
       { _id: productId },
       {
-        $set: {
-          currentStatus:'Distributed',
-          distributor: {
-            name: distributor.username,
-            location: distributor.location,
-            email: distributor.email,
-            distributedDate: new Date().toLocaleString()
-          }
-        }
+        $push: { status: [newStatus] }, // Add the new status to the status array
+        $set: { distributor:distributor._id}, // Cast distributorId to ObjectId
       }
     );
 
-    const currentStatus = 'Distributed'; // Set the current status
+    let currentStatus = newStatus.currentStatus
+    let time = newStatus.updatedTime.toLocaleString()
 
-    res.status(200).json({ message: 'Product distributed successfully', currentStatus });
+    res.status(200).json({ message: 'Product distributed successfully', currentStatus,time });
   } catch (error) {
     console.error('Error distributing product:', error);
     return next(createHttpError(500, 'Failed to distribute product.'));
@@ -54,20 +54,17 @@ export const deleteDistributorDetails = async (req, res, next) => {
     if (!product) {
       return res.status(404).json({ error: "Product Not Found" });
     }
+    let status = product.status[product.status.length-1]
 
-    if (product.currentStatus !== 'Distributed') {
+    if (status.currentStatus !== 'Distributed') {
       return res.status(400).json({ error: "Product must be in distributed state to cancel distribute" });
     }
     // canceling distribution
     await productModel.updateOne(
       { _id: productId },
       {
-        $unset: {
-          'distributor': 1
-        },
-        $set: {
-          'currentStatus': 'Manufactured'
-        }
+        $unset: { distributor: 1 }, // Unset the distributor field
+        $pop: { status: 1 }, // Remove the last element from the status array
       }
     );
     const currentStatus = "Manufactured"

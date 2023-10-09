@@ -11,7 +11,6 @@ import testRoute from './routes/testRoute.js'
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 import { verifyDistributor } from "./middlewares/verifyDistributor.js";
 import { verifyManufacturer } from "./middlewares/verifyManufacturer.js";
-import productModel from "./models/productModel.js";
 import { verifyRetailer } from "./middlewares/verifyRetailer.js";
 import { verifyCustomer } from "./middlewares/verifyCustomer.js";
 
@@ -43,23 +42,9 @@ app.use(
   verifyCustomer,
   customerRoute
 );
-app.use('/test', testRoute)
-
-//get all details of a product
-
-app.get('/api/product-details/:productId', async (req, res, next) => {
-  try {
-    const productId = req.params.productId;
-    const product = await productModel.findOne({ _id: productId });
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product Not Found' });
-    }
-    res.json(product);
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    return next(createHttpError(500, 'Failed to fetch product.'));
-  }
+app.use('/api/test', testRoute)
+app.get('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 

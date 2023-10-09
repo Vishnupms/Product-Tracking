@@ -11,20 +11,24 @@ export const addProduct = async (req,res) =>{
           name,
           description,
           price,
-          MFG:new Date().toLocaleString(),
-          manufacturer:{
-            name: manufacturer.username,
-            location:manufacturer.location,
-            email:manufacturer.email,
-            manufacturedDate: new Date().toLocaleString()
-          }
+          MFG:new Date(),
+          status:[
+            {
+              currentStatus: 'Manufactured', // This value is within the enum
+              updatedTime: new Date(),
+            },
+          ],
+          manufacturer:manufacturer._id
         });
     
-        // Save the product to the database
+      
         await product.save();
 
-        const currentStatus = product.currentStatus;
-        res.status(201).json({ message: "Product added successfully", currentStatus});
+        const status = product.status[0]
+        let currentStatus = status.currentStatus
+        let time = status.updatedTime.toLocaleString()
+
+        res.status(201).json({ message: "Product added successfully", currentStatus,time});
       } catch (error) {
         console.error("Error adding product:", error);
         res.status(500).json({ error: "Failed to add product" });
@@ -37,10 +41,13 @@ export const deleteProduct= async(req,res)=>{
 
     const product = await productModel.findOne({ _id: productId });
 
+    let status = product.status[product.status.length-1]
+    
+
     if (!product) {
       return res.status(404).json({ error: 'Product Not Found' });
     }
-    if(product.currentStatus !== "Manufactured"){
+    if(status.currentStatus !== "Manufactured"){
       return  res.status(403).json({message:"You cannot delete a distributed product"});
     }
     await productModel.findByIdAndDelete(productId);

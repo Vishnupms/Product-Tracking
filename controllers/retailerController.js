@@ -8,43 +8,38 @@ export const retailProduct = async (req, res, next) => {
       const retailer = req.user;
      
       const product = await productModel.findOne({ _id: productId });
-
-      console.log(product.currentStatus,"cc")
   
       if (!product) {
         return res.status(404).json({ error: "Product Not Found" });
       }
+      let status = product.status[product.status.length-1]
   
-      if (product.currentStatus === 'Retailed') {
+      if (status.currentStatus === 'Retailed') {
         return res.status(400).json({ error: "Product is already retailed" });
       }
+    
+      if (status.currentStatus !== 'Distributed') {
+        return res.status(400).json({ error: "Product must be in distributed state to be Retailed" });
+      }
 
-      if(product.currentStatus === "Manufactured"){
-        return res.status(400).json({ error: "Product must be in distributed state to be Retailed" });
-      }
-  
-      if (product.currentStatus !== 'Distributed') {
-        return res.status(400).json({ error: "Product must be in distributed state to be Retailed" });
-      }
+      const newStatus = {
+        currentStatus: 'Retailed',
+        updatedTime: new Date(),
+      };
   // adding reailer details and changing status to retailed
-      await productModel.updateOne(
-        { _id: productId },
-        {
-          $set: {
-            currentStatus:'Retailed',
-            retailer: {
-              name: retailer.username,
-              location: retailer.location,
-              email: retailer.email,
-              retailedDate: new Date().toLocaleString()
-            }
-          }
-        }
-      );
+  await productModel.updateOne(
+    
+    { _id: productId },
+    {
+      $push: { status: [newStatus] }, // Add the new status to the status array
+      $set: { retailer:retailer._id}, // Cast distributorId to ObjectId
+    }
+  );
   
-      const currentStatus = 'Retailed'; 
+  let currentStatus = newStatus.currentStatus
+  let time = newStatus.updatedTime.toLocaleString()
   
-      res.status(200).json({ message: 'Product retailed successfully', currentStatus });
+      res.status(200).json({ message: 'Product retailed successfully', currentStatus,time });
     } catch (error) {
       console.error('Error retailing product:', error);
       return next(createHttpError(500, 'Failed to retail product.'));
@@ -59,8 +54,9 @@ export const retailProduct = async (req, res, next) => {
       if (!product) {
         return res.status(404).json({ error: "Product Not Found" });
       }
-  
-      if (product.currentStatus !== 'Retailed') {
+      let status = product.status[product.status.length-1]
+
+      if (status.currentStatus !== 'Retailed') {
         return res.status(400).json({ error: "Product must be in retailing state to cancel retail" });
       }
   
@@ -68,12 +64,8 @@ export const retailProduct = async (req, res, next) => {
       await productModel.updateOne(
         { _id: productId },
         {
-          $unset: {
-            'retailer': 1
-          },
-          $set: {
-            'currentStatus': 'Distributed'
-          }
+          $unset: { retailer: 1 }, // Unset the distributor field
+          $pop: { status: 1 }, // Remove the last element from the status array
         }
       );
       const currentStatus = "Distributed"

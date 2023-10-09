@@ -5,6 +5,7 @@ const router = express.Router();
 
 //distribute-product
 router.patch("/deliver-product/:productId",controller.deliverProduct)
+router.get("/track-my-product/:productId",controller.trackMyProduct)
 
 
 
