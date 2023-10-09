@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import connect from "./config/db.js";
-import "dotenv/config.js";
+import http from 'http'
+import 'dotenv/config.js'
+import mongoose from "mongoose";
 import authRoute from "./routes/authRoutes.js";
 import manufacturerRoute from "./routes/manufacturerRoute.js";
 import distributorRoute from "./routes/distributorRoute.js";
@@ -15,6 +16,8 @@ import { verifyRetailer } from "./middlewares/verifyRetailer.js";
 import { verifyCustomer } from "./middlewares/verifyCustomer.js";
 
 const app = express();
+
+const server = http.createServer(app)
 app.use(express.json());
 app.use(cors());
 app.use("/api/auth", authRoute);
@@ -51,11 +54,15 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT;
-app.listen(port, async () => {
+
+mongoose.connect(process.env.DB_STRING).then(() => {
   try {
-    await connect();
-    console.log(`server connected to PORT:${port}`);
+      server.listen(port, () => {
+          console.log(`server connected to PORT:${port}`);
+      })
   } catch (error) {
-    console.log(error);
+      console.log('cannot connect to the server');
   }
-});
+}).catch(error => {
+  console.log('Invalid Database Connection...!')
+})
