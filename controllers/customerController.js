@@ -5,7 +5,7 @@ export const deliverProduct = async (req, res, next) => {
     try {
       const productId = req.params.productId;
       const customer = req.user;
-      console.log(customer._id,"cdc")
+    
   
       const product = await productModel.findOne({ _id: productId });
   
