@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import productModel from '../models/productModel.js';
-import mongoose from "mongoose";
+
 
 
 export const distributeProduct = async (req, res, next) => {

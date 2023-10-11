@@ -14,7 +14,7 @@ export const addProduct = async (req,res) =>{
           MFG:new Date(),
           status:[
             {
-              currentStatus: 'Manufactured', // This value is within the enum
+              currentStatus: 'Manufactured',
               updatedTime: new Date(),
             },
           ],

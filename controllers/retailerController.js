@@ -32,8 +32,8 @@ export const retailProduct = async (req, res, next) => {
     
     { _id: productId },
     {
-      $push: { status: [newStatus] }, // Add the new status to the status array
-      $set: { retailer:retailer._id}, // Cast distributorId to ObjectId
+      $push: { status: [newStatus] },
+      $set: { retailer:retailer._id}, 
     }
   );
   let retailerName = retailer.username

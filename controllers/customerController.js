@@ -55,7 +55,7 @@ export const deliverProduct = async (req, res, next) => {
       const product = await productModel.findById(productId)
       .populate({
         path: 'manufacturer distributor retailer customer',
-        select: 'username email phone location -_id', // Exclude the _id field
+        select: 'username email phone location -_id',
       })
       .exec()
 
