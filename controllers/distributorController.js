@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 export const distributeProduct = async (req, res, next) => {
   try {
     const productId = req.params.productId;
+    
     const distributor = req.user;
 
     const product = await productModel.findOne({ _id: productId });
@@ -34,11 +35,12 @@ export const distributeProduct = async (req, res, next) => {
         $set: { distributor:distributor._id}, // Cast distributorId to ObjectId
       }
     );
-
+    let distributerName = distributor.username
     let currentStatus = newStatus.currentStatus
+    let productName = product.name
     let time = newStatus.updatedTime.toLocaleString()
 
-    res.status(200).json({ message: 'Product distributed successfully', currentStatus,time });
+    res.status(200).json({ message: `${productName} distributed successfully by ${distributerName}`, currentStatus,time });
   } catch (error) {
     console.error('Error distributing product:', error);
     return next(createHttpError(500, 'Failed to distribute product.'));

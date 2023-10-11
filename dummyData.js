@@ -1,9 +1,9 @@
-export const dummyManufacturers =[
+export const dummydatas =[
     {
       "username": "Manufacturer1",
       "email": "manufacturer1@example.com",
       "password": "password123",
-      "phone": "1234567890",
+      "phone": 1234567890,
       "location": "Manufacturer Location",
       "role": "manufacturer"
     },
@@ -11,7 +11,7 @@ export const dummyManufacturers =[
       "username": "Distributor1",
       "email": "distributor1@example.com",
       "password": "password123",
-      "phone": "1234567891",
+      "phone": 1234567891,
       "location": "Distributor Location",
       "role": "distributor"
     },
@@ -19,7 +19,7 @@ export const dummyManufacturers =[
       "username": "Retailer1",
       "email": "retailer1@example.com",
       "password": "password123",
-      "phone": "1234567892",
+      "phone": 1234567892,
       "location": "Retailer Location",
       "role": "retailer"
     },
@@ -27,7 +27,7 @@ export const dummyManufacturers =[
       "username": "Customer1",
       "email": "customer1@example.com",
       "password": "password123",
-      "phone": "1234567893",
+      "phone": 1234567893,
       "location": "Customer Location",
       "role": "customer"
     }

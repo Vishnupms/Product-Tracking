@@ -5,8 +5,9 @@ import productModel from "../models/productModel.js";
 export const retailProduct = async (req, res, next) => {
     try {
       const productId = req.params.productId;
-      const retailer = req.user;
      
+      const retailer = req.user;
+      
       const product = await productModel.findOne({ _id: productId });
   
       if (!product) {
@@ -35,11 +36,12 @@ export const retailProduct = async (req, res, next) => {
       $set: { retailer:retailer._id}, // Cast distributorId to ObjectId
     }
   );
-  
+  let retailerName = retailer.username
+  let productName = product.name
   let currentStatus = newStatus.currentStatus
   let time = newStatus.updatedTime.toLocaleString()
   
-      res.status(200).json({ message: 'Product retailed successfully', currentStatus,time });
+      res.status(200).json({ message: `${productName} is retailed by ${retailerName}`, currentStatus,time });
     } catch (error) {
       console.error('Error retailing product:', error);
       return next(createHttpError(500, 'Failed to retail product.'));

@@ -46,13 +46,17 @@ app.use(
   customerRoute
 );
 app.use('/api/test', testRoute)
-app.get('/api/*', (req, res) => {
+
+app.get('/', (req, res) => {
+  res.send('Hello, Tester!');
+});
+app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
-
 const port = process.env.PORT;
 const DB = process.env.DB_STRING
 

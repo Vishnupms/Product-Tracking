@@ -6,7 +6,9 @@ export const deliverProduct = async (req, res, next) => {
       const productId = req.params.productId;
       const customer = req.user;
     
-  
+      if(!productId){
+        return res.status(400).json({ error: "please select a product to deliver" });
+      }
       const product = await productModel.findOne({ _id: productId });
   
       if (!product) {
@@ -47,7 +49,9 @@ export const deliverProduct = async (req, res, next) => {
   export const trackMyProduct = async(req,res)=>{
     try {
       const productId = req.params.productId;
-      
+      if(!productId){
+        return res.status(400).json({ error: "please select a product to track" });
+      }
       const product = await productModel.findById(productId)
       .populate({
         path: 'manufacturer distributor retailer customer',
