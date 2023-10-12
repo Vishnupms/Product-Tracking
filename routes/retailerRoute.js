@@ -7,7 +7,7 @@ const router = express.Router();
 //distribute-product
 router.patch("/retail-product/:productId",validateProductId(),controller.retailProduct)
 
-//cancel- retailing
+//cancel- retailing /
 router.patch("/cancel-retail/:productId",validateProductId(),controller.cancelRetailing)
 
 

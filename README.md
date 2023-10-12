@@ -1,5 +1,5 @@
 Product Tracking App
-This is a web application will add/delete manufacturer details ,distributer details,retailer details,customer details, when the product reaches manufacturer,distributer,retailer and customer respectively, and update status accordingly, manufacturer can add and delete the product
+This is a web application that will add/delete manufacturer details ,distributer details,retailer details,customer details, when the product reaches manufacturer,distributer,retailer and customer respectively, and update status accordingly, manufacturer can add and delete the product
 
 Prerequisites Node.js (>=12) npm
 

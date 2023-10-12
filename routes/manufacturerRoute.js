@@ -9,7 +9,7 @@ const router = express.Router();
 //add-product
 router.post("/add-product",validateProduct,controller.addProduct)
 
-// delete a manufactured product
+// delete a manufactured product if the product is just manufactured / in case product has anu defects
 router.delete("/delete-product/:productId",validateProductId(),controller.deleteProduct)
 
 

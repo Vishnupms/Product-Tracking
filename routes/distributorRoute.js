@@ -6,6 +6,8 @@ const router = express.Router();
 
 //distribute-product
 router.patch("/distribute/:productId",validateProductId(),controller.distributeProduct)
+
+//cancel distribue if the product is just on distributed mode
 router.patch("/cancel-distribute/:productId",validateProductId(),controller.deleteDistributorDetails)
 
 

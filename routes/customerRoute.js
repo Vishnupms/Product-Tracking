@@ -4,8 +4,10 @@ const router = express.Router();
 import { validateProductId } from "../helpers/validateProductId.js";
 
 
-//distribute-product
+//deliver-product
 router.patch("/deliver-product/:productId",validateProductId(),controller.deliverProduct)
+
+//track-my-product
 router.get("/track-my-product/:productId",validateProductId(),controller.trackMyProduct)
 
 

@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 const router = express.Router();
 
+
+// register users/ manufactures/ distributers/ retailers/ and customers based on role
 router.post("/register", async (req, res) => {
   try {
     const userData = req.body; 
